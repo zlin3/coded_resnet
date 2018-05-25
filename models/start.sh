@@ -9,12 +9,12 @@ if [ "$M_OR_S" == "master" ]; then
     done
 fi
 
-#python resnet/resnet_main.py --train_data_path=cifar10/data_batch* \
-#                             --log_root=/tmp/resnet_model \
-#                             --train_dir=/tmp/resnet_model/train \
-#                             --dataset='cifar10' \
-#                             --num_gpus=0 \
-#                             --xor_groups=$XORS
+python resnet/resnet_main.py --train_data_path=cifar10/data_batch* \
+                             --log_root=/tmp/resnet_model \
+                             --train_dir=/tmp/resnet_model/train \
+                             --dataset='cifar10' \
+                             --num_gpus=0 \
+                             --xor_groups=$XORS
 if [ "$M_OR_S" == "master" ]; then
     mpirun -mca btl ^openib --allow-run-as-root --bind-to none -host localhost,nerv2,nerv3,nerv4,nerv5,nerv6 \
            --mca plm_rsh_no_tree_spawn 1 python -u resnet/resnet_main_parallel_own.py --train_data_path=cifar100/train* \
