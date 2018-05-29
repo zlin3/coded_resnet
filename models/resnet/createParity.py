@@ -19,8 +19,10 @@ def createParityMap(numClasses):
     return mapping
         
 if __name__ == '__main__':
-    mapping = createParityMap(100)
+    mapping = createParityMap(10)
     print(len(mapping))
+    i = 1
     for key in sorted(mapping.keys()):
-        print(key)
+        print(key, i)
+        i += 1
         print(len(mapping[key]))
