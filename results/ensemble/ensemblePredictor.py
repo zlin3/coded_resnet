@@ -18,14 +18,14 @@ def vote(preds):
 
 
 if __name__ == '__main__':
-    numEnsemble = 10
-    pred = np.loadtxt('prediction_0.txt', dtype=int)
-    truth = np.loadtxt('truth.txt', dtype=int)
-    precision = np.sum(pred == truth) / truth.shape[0]
-    preds = createPredictions(numEnsemble)
-    ensemblePred = vote(preds)
-    ensemblePred = ensemblePred.reshape((-1,))
-    ensemblePrecision = np.sum(ensemblePred == truth) / truth.shape[0]
-    print ('uncoded precision is: %f' % precision)
-    print ('ensemble precision with %d models is: %f' % (numEnsemble, ensemblePrecision))
+    for numEnsemble in range(30, 46):
+        pred = np.loadtxt('prediction_0.txt', dtype=int)
+        truth = np.loadtxt('truth.txt', dtype=int)
+        precision = np.sum(pred == truth) / truth.shape[0]
+        preds = createPredictions(numEnsemble)
+        ensemblePred = vote(preds)
+        ensemblePred = ensemblePred.reshape((-1,))
+        ensemblePrecision = np.sum(ensemblePred == truth) / truth.shape[0]
+        print ('uncoded precision is: %f' % precision)
+        print ('ensemble precision with %d models is: %f' % (numEnsemble, ensemblePrecision))
 

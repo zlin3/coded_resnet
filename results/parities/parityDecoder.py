@@ -105,7 +105,7 @@ def main():
     softmaxes = np.loadtxt('softmaxes.txt')
     truth = np.loadtxt('truth.txt')
     numParities = int(softmaxes.shape[1])
-    neededParities = 20
+    neededParities = 45
     #for trial in range(10):
     for comb in combinations(range(numParities), neededParities):
         #idx = np.sort(np.random.choice(range(numParities), neededParities, replace=False))
