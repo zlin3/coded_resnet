@@ -13,6 +13,8 @@ def decode(pred, finalPred):
     parities = []
     for p1, p2 in combinations(range(numClasses), 2): 
         parities.append(set([p1,p2]))
+    for p1, p2, p3 in combinations(range(numClasses), 3): 
+        parities.append(set([p1,p2,p3]))
 
     idx0 = np.where(pred == 0)[0]
     idx1 = np.where(pred == 1)[0]
@@ -51,6 +53,8 @@ def decode_soft(pred, finalPred, pid):
     parities = []
     for p1, p2 in combinations(range(numClasses), 2): 
         parities.append(set([p1,p2]))
+    for p1, p2, p3 in combinations(range(numClasses), 3): 
+        parities.append(set([p1,p2,p3]))
 
     idx0 = np.where(pred < 0.5)[0]
     idx1 = np.where(pred >= 0.5)[0]
@@ -80,14 +84,19 @@ def decode_soft(pred, finalPred, pid):
         for p in parities[idx]:
             count1[p] += val  
     inter1 = np.argmax(count1)
-    finalPred.append(inter0)
-    if inter0 != inter1:
-        #print (pid, count0, count1)
-        #print (inter0, inter1)
-        count0 = softmax(count0)
-        count1 = softmax(count1)
-        if count1[inter1] > count0[inter0]:
-            finalPred[-1] = inter1
+
+    #finalPred.append(inter0)
+    #if inter0 != inter1:
+    #    #print (pid, count0, count1)
+    #    #print (inter0, inter1)
+    #    count0 = softmax(count0)
+    #    count1 = softmax(count1)
+    #    if count1[inter1] > count0[inter0]:
+    #        finalPred[-1] = inter1
+
+    countTotal = np.array(count0) + np.array(count1)
+    inter = np.argmax(countTotal)
+    finalPred.append(inter)
 
 def evaluate(parities_pred, softmaxes, truth):
     finalPred = []
@@ -101,13 +110,14 @@ def evaluate(parities_pred, softmaxes, truth):
     np.savetxt('finalPred_soft.txt', finalPred, fmt='%d')
 
 def main():
-    parities_pred = np.loadtxt('parities.txt')
-    softmaxes = np.loadtxt('softmaxes.txt')
+    parities_pred = np.loadtxt('parities_new.txt')
+    softmaxes = np.loadtxt('softmaxes_new.txt')
     truth = np.loadtxt('truth.txt')
     numParities = int(softmaxes.shape[1])
     neededParities = 45
     #for trial in range(10):
     for comb in combinations(range(numParities), neededParities):
+    #for comb in combinations(range(numParities), numParities):
         #idx = np.sort(np.random.choice(range(numParities), neededParities, replace=False))
         idx = np.sort(np.array(comb))
         print (idx)

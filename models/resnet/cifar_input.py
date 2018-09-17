@@ -77,11 +77,16 @@ def build_input(dataset, data_path, batch_size, mode, xor_groups):
     # image = tf.image.random_contrast(image, lower=0.2, upper=1.8)
     image = tf.image.per_image_standardization(image)
 
-    example_queue = tf.RandomShuffleQueue(
+    #example_queue = tf.RandomShuffleQueue(
+    #    capacity=16 * batch_size,
+    #    min_after_dequeue=8 * batch_size,
+    #    dtypes=[tf.float32, tf.int32],
+    #    shapes=[[image_size, image_size, depth], [1]])
+    example_queue = tf.FIFOQueue(
         capacity=16 * batch_size,
-        min_after_dequeue=8 * batch_size,
         dtypes=[tf.float32, tf.int32],
         shapes=[[image_size, image_size, depth], [1]])
+
     num_threads = 16
   else:
     image = tf.image.resize_image_with_crop_or_pad(
@@ -107,8 +112,10 @@ def build_input(dataset, data_path, batch_size, mode, xor_groups):
       classesHolder = 100
   xs = [tf.ones([batch_size, 1], dtype=tf.int32) * i for i in range(classesHolder)]
   mapping = createParityMap(classesHolder)
-  mappingKeys = sorted(mapping.keys())
+  mappingKeys = sorted(mapping.keys(), key=lambda a: (len(a), a))
   pairs = [mapping[mappingKeys[xor_groups]]]
+  print 'xor_groups is %s' % str(xor_groups)
+  print 'pairs is %s' % str(pairs)
 #  if xor_groups == 0:
 #      pairs = [(4,5,6,7,8,9)]
 #  elif xor_groups == 1:
